@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FitTrack – Fitness Tracking App</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f5fa;--card:#fff;--tx:#14213d;--mu:#5b6478;--bd:#e1e5ef;--pr:#2f5bea;--pr2:#e6ecff;--co:#ff6b4a;--co2:#ffe9e4;--gn:#12a370;--gn2:#dcf5ea;--am:#b7791f;--am2:#fdf1d8;--rd:#c62828;--rd2:#fde4e4;--side:#14213d;--sh:0 1px 3px rgba(20,33,61,.08);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1424;--card:#172038;--tx:#e8ecf7;--mu:#98a2ba;--bd:#26314d;--pr:#7c9bff;--pr2:#22305f;--co:#ff8a6e;--co2:#3d2620;--gn:#3ecf9a;--gn2:#153a2e;--am:#f0b95a;--am2:#3b2f14;--rd:#ff8a8a;--rd2:#3d1c1c;--side:#0a1020}}
+:root[data-theme="dark"]{--bg:#0d1424;--card:#172038;--tx:#e8ecf7;--mu:#98a2ba;--bd:#26314d;--pr:#7c9bff;--pr2:#22305f;--co:#ff8a6e;--co2:#3d2620;--gn:#3ecf9a;--gn2:#153a2e;--am:#f0b95a;--am2:#3b2f14;--rd:#ff8a8a;--rd2:#3d1c1c;--side:#0a1020}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3,.num{font-family:Sora,system-ui,sans-serif;margin:0;letter-spacing:-.01em}
+h1{font-size:1.6rem}h2{font-size:1.05rem;margin-bottom:.75rem}
+.mu{color:var(--mu)}p{margin:.25rem 0}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--pr);outline-offset:2px}
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100%}
+aside{background:var(--side);color:#fff;padding:1.25rem .9rem;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:.25rem}
+.logo{font:700 1.25rem Sora,sans-serif;padding:.3rem .6rem 1.2rem;color:#fff}.logo b{color:var(--co)}
+nav{display:flex;flex-direction:column;gap:.2rem}
+.nb{display:flex;align-items:center;gap:.7rem;background:none;border:0;color:#c5cce0;padding:.7rem .8rem;border-radius:10px;cursor:pointer;text-align:left;transition:background .2s,color .2s}
+.nb:hover{background:rgba(255,255,255,.08);color:#fff}
+.nb[aria-current=page]{background:var(--pr);color:#fff;font-weight:600}
+.nb .i{font-size:1.15rem;width:1.5rem;text-align:center}
+.sp{flex:1}
+main{padding:1.5rem clamp(1rem,3vw,2.5rem) 3rem;max-width:1100px;width:100%}
+.ph{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.btn{background:var(--pr);color:#fff;border:0;border-radius:10px;padding:.65rem 1.1rem;font-weight:600;cursor:pointer;min-height:44px;transition:transform .15s,filter .2s}
+.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}.btn:active{transform:none}
+.btn.ghost{background:transparent;color:var(--tx);border:1px solid var(--bd)}
+.btn.co{background:var(--co);color:#14213d}
+.btn.sm{padding:.4rem .8rem;min-height:36px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:1.1rem;box-shadow:var(--sh);margin-bottom:1rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1rem}
+.g4 .card{margin:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:.4rem;transition:transform .2s}
+.g4 .card:hover{transform:translateY(-3px)}
+.ring{position:relative;width:96px;height:96px}
+.ring svg{transform:rotate(-90deg)}.ring circle{fill:none;stroke-width:9;stroke-linecap:round}
+.ring .t{stroke:var(--bd)}.ring .v{transition:stroke-dashoffset 1s ease}
+.ring span{position:absolute;inset:0;display:grid;place-items:center;font-size:1.5rem}
+.num{font-size:1.4rem;font-weight:700}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.g2 .card{margin:0}
+.bar{height:12px;background:var(--bd);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:var(--pr);transition:width .8s ease}
+.done i{background:var(--gn)}
+.gl{margin-bottom:1.25rem}.gl .row{display:flex;justify-content:space-between;margin-bottom:.4rem;gap:.5rem}
+.chart{display:flex;align-items:flex-end;gap:.6rem;height:180px;padding-top:1rem}
+.chart div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;font-size:.8rem;gap:.25rem}
+.chart i{width:100%;max-width:44px;background:var(--pr2);border-radius:8px 8px 0 0;border:2px solid var(--pr);border-bottom:0;transition:height .8s ease}
+.chart .today i{background:var(--co);border-color:var(--co)}
+.chart b{font-weight:600}
+.chips{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.chip{border:1px solid var(--bd);background:var(--card);border-radius:99px;padding:.4rem .9rem;cursor:pointer;min-height:36px}
+.chip[aria-pressed=true]{background:var(--pr);color:#fff;border-color:var(--pr)}
+.act{display:flex;align-items:center;gap:.9rem;padding:.75rem 0;border-bottom:1px solid var(--bd)}
+.act:last-child{border:0}.act .e{font-size:1.5rem;background:var(--pr2);border-radius:12px;width:48px;height:48px;display:grid;place-items:center;flex:none}
+.act .m{flex:1;min-width:0}.act .s{text-align:right;font-size:.9rem;color:var(--mu)}
+.wg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem}
+.wg .card{margin:0;display:flex;flex-direction:column;gap:.5rem;transition:transform .2s,box-shadow .2s}
+.wg .card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(20,33,61,.12)}
+.big{font-size:2rem}
+.badge{display:inline-block;border-radius:99px;padding:.1rem .65rem;font-size:.8rem;font-weight:600}
+.Beginner,.Low{background:var(--gn2);color:var(--gn)}.Intermediate,.Medium{background:var(--am2);color:var(--am)}.Advanced,.High{background:var(--rd2);color:var(--rd)}
+dl{display:grid;grid-template-columns:auto 1fr;gap:.6rem 1.5rem;margin:0}dt{color:var(--mu)}dd{margin:0;font-weight:600}
+.av{width:72px;height:72px;border-radius:50%;background:var(--co);display:grid;place-items:center;font:700 1.8rem Sora,sans-serif;color:#14213d}
+label{display:block;margin-bottom:.9rem;font-weight:600;font-size:.92rem}
+label input,label select{display:block;width:100%;margin-top:.3rem;padding:.6rem .7rem;border:1px solid var(--bd);border-radius:10px;background:var(--bg);font-weight:400}
+label input[aria-invalid=true]{border-color:var(--rd)}
+.er{display:block;color:var(--rd);font-weight:500;font-size:.85rem;min-height:0}
+.hint{color:var(--mu);font-weight:400;font-size:.82rem}
+.row2{display:flex;gap:.6rem;justify-content:flex-end;flex-wrap:wrap}
+.tw{overflow-x:auto;border:1px solid var(--bd);border-radius:14px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:860px;font-size:.9rem}
+th,td{padding:.75rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--bd)}
+th{background:var(--pr2);font-weight:700;position:sticky;top:0}
+tr:last-child td{border:0}
+#modal{position:fixed;inset:0;background:rgba(10,16,32,.55);display:none;align-items:center;justify-content:center;padding:1rem;z-index:50}
+#modal.on{display:flex}
+.mb{background:var(--card);border-radius:16px;padding:1.4rem;max-width:460px;width:100%;max-height:90vh;overflow:auto;animation:pop .2s ease}
+@keyframes pop{from{transform:scale(.95);opacity:0}}
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,120px);background:#14213d;color:#fff;border-radius:12px;padding:.75rem 1rem;display:flex;gap:1rem;align-items:center;transition:transform .3s;z-index:60;max-width:92vw;border:1px solid #3a4a75}
+#toast.on{transform:translate(-50%,0)}
+#toast button{background:none;border:0;color:#ffb4a3;font-weight:700;cursor:pointer;text-decoration:underline}
+.tm{font-size:3rem;text-align:center;margin:.5rem 0}
+.tip{background:var(--pr2);border-radius:12px;padding:.8rem 1rem;margin-top:.8rem;font-size:.92rem}
+.bn{display:none}
+@media(max-width:1000px){.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){
+.app{display:block}aside{display:none}
+main{padding-bottom:6rem}
+.g2{grid-template-columns:1fr}
+.bn{display:flex;position:fixed;left:0;right:0;bottom:0;background:var(--side);padding:.3rem .2rem calc(.3rem + env(safe-area-inset-bottom,0px));z-index:40;justify-content:space-around}
+.bn .nb{flex-direction:column;gap:0;font-size:.68rem;padding:.4rem .2rem;min-width:0;flex:1;align-items:center;text-align:center;border-radius:8px}
+#toast{bottom:88px}
+h1{font-size:1.35rem}
+}
+@media(max-width:420px){.g4{gap:.6rem}.ring{width:80px;height:80px}.num{font-size:1.15rem}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+ <div class="logo">Fit<b>Track</b></div>
+ <nav id="nav" aria-label="Main navigation"></nav>
+ <div class="sp"></div>
+ <button class="nb" data-a="help"><span class="i" aria-hidden="true">❓</span>Help &amp; shortcuts</button>
+</aside>
+<main id="main" aria-live="polite"></main>
+</div>
+<nav class="bn" id="bn" aria-label="Main navigation"></nav>
+<div id="modal" role="presentation"></div>
+<div id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const NAV=[['dash','🏠','Dashboard'],['act','📈','Activity'],['goals','🎯','Goals'],['wo','🏋️','Workouts'],['prof','👤','Profile'],['eval','📋','Evaluation']];
+const IC={Walking:'🚶',Running:'🏃',Cycling:'🚴',Workout:'💪'},RATE={Walking:4,Running:10,Cycling:7,Workout:8};
+const WO=[['Morning Stretch',10,'Beginner',40,'🧘'],['Brisk Walk Intervals',20,'Beginner',110,'🚶'],['Bodyweight Basics',20,'Beginner',130,'💪'],['Core Starter',15,'Beginner',90,'🤸'],['Low-Impact Cardio',25,'Intermediate',170,'🕺'],['Cycling Endurance',35,'Intermediate',260,'🚴']];
+const DEF={steps:10000,cal:500,wo:3};
+const S={steps:6420,cal:380,dist:4.8,min:46,g:{...DEF},wo:2,f:'All',edit:false,
+acts:[{t:'Walking',n:'Morning walk',d:35,km:2.6,c:130,w:'Today'},{t:'Cycling',n:'Evening ride',d:40,km:11.2,c:280,w:'Yesterday'},{t:'Running',n:'Park run',d:25,km:4.1,c:260,w:'2 days ago'},{t:'Workout',n:'Full-body strength',d:30,km:0,c:210,w:'3 days ago'}],
+week:[38,52,25,60,44,30,46],p:{name:'Alex Morgan',age:20,h:172,w:65,goal:'Build a daily walking habit'}};
+let cur='dash',tmr=null,tt=null,undo=null;
+const pct=(a,b)=>Math.min(100,Math.round(a/b*100));
+
+function ring(p,col,ico){const c=2*Math.PI*38;return `<div class="ring"><svg width="100%" height="100%" viewBox="0 0 96 96"><circle class="t" cx="48" cy="48" r="38"/><circle class="v" cx="48" cy="48" r="38" stroke="${col}" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-p/100)}"/></svg><span aria-hidden="true">${ico}</span></div>`}
+function stat(ico,lab,val,unit,p,col){return `<div class="card" role="group" aria-label="${lab}">${ring(p,col,ico)}<div class="num">${val}</div><div>${lab}</div><div class="mu" style="font-size:.85rem">${p}% of daily target · ${unit}</div></div>`}
+function goal(lab,ico,a,b,unit){const p=pct(a,b),ok=p>=100;return `<div class="gl"><div class="row"><b>${ico} ${lab}</b><span>${a.toLocaleString()} / ${b.toLocaleString()} ${unit}</span></div><div class="bar ${ok?'done':''}" role="progressbar" aria-valuenow="${p}" aria-valuemin="0" aria-valuemax="100" aria-label="${lab}"><i style="width:${p}%"></i></div><p class="mu" style="font-size:.88rem">${ok?'✅ Goal reached — great work!':`${p}% complete · ${(b-a).toLocaleString()} ${unit} to go`}</p></div>`}
+
+const V={
+dash(){const h=new Date().getHours(),gr=h<12?'Good morning':h<17?'Good afternoon':'Good evening',left=Math.max(0,S.g.steps-S.steps),mins=Math.ceil(left/100);
+return `<div class="ph"><div><h1>${gr}, ${esc(S.p.name.split(' ')[0])} 👋</h1><p class="mu">Here is how your day is going. Data updated just now.</p></div><button class="btn" data-a="log">＋ Log activity</button></div>
+<div class="g4">${stat('👟','Steps',S.steps.toLocaleString(),'steps',pct(S.steps,S.g.steps),'var(--pr)')}${stat('🔥','Calories burned',S.cal,'kcal',pct(S.cal,S.g.cal),'var(--co)')}${stat('📍','Distance',S.dist+' km','km',pct(S.dist,6),'var(--gn)')}${stat('⏱️','Active minutes',S.min,'min',pct(S.min,60),'var(--am)')}</div>
+<div class="g2"><div class="card"><h2>Today's summary</h2><p>${left?`You have walked <b>${pct(S.steps,S.g.steps)}%</b> of your step goal. About <b>${mins} minutes</b> of brisk walking will get you there.`:'You reached your step goal today. Time to rest or try a workout!'}</p><p class="mu">${S.wo} of ${S.g.wo} workouts done this week.</p><div class="row2" style="justify-content:flex-start;margin-top:.8rem"><button class="btn sm" data-a="go" data-v="wo">Find a workout</button><button class="btn sm ghost" data-a="go" data-v="goals">View goals</button></div></div>
+<div class="card"><h2>Recent activity</h2>${S.acts.slice(0,3).map(row).join('')}</div></div>`},
+act(){const l=S.acts.filter(a=>S.f=='All'||a.t==S.f),lab=[...Array(7)].map((_,i)=>new Date(Date.now()-(6-i)*864e5).toLocaleDateString('en',{weekday:'short'})),mx=Math.max(...S.week,60);
+return `<div class="ph"><div><h1>Activity</h1><p class="mu">Track walking, running, cycling and workouts.</p></div><button class="btn" data-a="log">＋ Log activity</button></div>
+<div class="card"><h2>Active minutes — last 7 days</h2><div class="chart" role="img" aria-label="Bar chart of active minutes per day">${S.week.map((v,i)=>`<div class="${i==6?'today':''}"><b>${v}</b><i style="height:${v/mx*78}%"></i><span class="mu">${i==6?'Today':lab[i]}</span></div>`).join('')}</div><p class="mu">Total this week: <b>${S.week.reduce((a,b)=>a+b)} min</b></p></div>
+<div class="chips" role="group" aria-label="Filter activities">${['All','Walking','Running','Cycling','Workout'].map(f=>`<button class="chip" aria-pressed="${S.f==f}" data-a="filt" data-f="${f}">${f=='All'?'All':IC[f]+' '+f}</button>`).join('')}</div>
+<div class="card">${l.length?l.map(row).join(''):'<p class="mu">No '+S.f.toLowerCase()+' activities yet. Tap “Log activity” to add one.</p>'}</div>`},
+goals(){return `<div class="ph"><div><h1>Goals</h1><p class="mu">Your daily and weekly targets.</p></div><button class="btn ghost" data-a="editg">✏️ Edit goals</button></div>
+<div class="card">${goal('Daily steps','👟',S.steps,S.g.steps,'steps')}${goal('Calorie burn','🔥',S.cal,S.g.cal,'kcal')}${goal('Weekly workouts','💪',S.wo,S.g.wo,'workouts')}</div>
+<div class="tip">💡 Tip: small goals you hit every day build stronger habits than big goals you miss.</div>`},
+wo(){return `<div class="ph"><div><h1>Workouts</h1><p class="mu">Beginner-friendly routines. No equipment needed.</p></div></div>
+<div class="wg">${WO.map((w,i)=>`<div class="card"><div class="big" aria-hidden="true">${w[4]}</div><h3>${w[0]}</h3><div><span class="badge ${w[2]}">${w[2]}</span></div><p class="mu">⏱️ ${w[1]} min · 🔥 ~${w[3]} kcal</p><button class="btn co" data-a="start" data-i="${i}">▶ Start workout</button></div>`).join('')}</div>`},
+prof(){const p=S.p,bmi=(p.w/((p.h/100)**2)).toFixed(1);
+if(S.edit)return `<div class="ph"><h1>Edit profile</h1></div><div class="card" style="max-width:520px"><form id="fp" novalidate>
+<label>Name<input name="name" value="${esc(p.name)}" maxlength="40"><span class="er"></span></label>
+<label>Age (years)<input name="age" type="number" value="${p.age}"><span class="hint">Between 13 and 100</span><span class="er"></span></label>
+<label>Height (cm)<input name="h" type="number" value="${p.h}"><span class="hint">Between 100 and 250</span><span class="er"></span></label>
+<label>Weight (kg)<input name="w" type="number" value="${p.w}"><span class="hint">Between 30 and 300</span><span class="er"></span></label>
+<label>Fitness goal<select name="goal">${['Build a daily walking habit','Lose weight','Build strength','Improve stamina'].map(g=>`<option ${g==p.goal?'selected':''}>${g}</option>`).join('')}</select></label>
+<div class="row2"><button type="button" class="btn ghost" data-a="canp">Cancel</button><button class="btn">Save profile</button></div></form></div>`;
+return `<div class="ph"><h1>Profile</h1><button class="btn" data-a="editp">✏️ Edit profile</button></div><div class="card" style="max-width:520px"><div style="display:flex;gap:1rem;align-items:center;margin-bottom:1.2rem"><div class="av" aria-hidden="true">${esc(p.name[0]).toUpperCase()}</div><div><h2 style="margin:0">${esc(p.name)}</h2><p class="mu">FitTrack member</p></div></div>
+<dl><dt>Age</dt><dd>${p.age} years</dd><dt>Height</dt><dd>${p.h} cm</dd><dt>Weight</dt><dd>${p.w} kg</dd><dt>BMI</dt><dd>${bmi}</dd><dt>Fitness goal</dt><dd>${esc(p.goal)}</dd></dl></div>`},
+eval(){return `<div class="ph"><div><h1>Heuristic Evaluation</h1><p class="mu">Nielsen's 10 usability heuristics applied to this prototype.</p></div></div>
+<div class="chips" role="group" aria-label="Filter by severity">${['All','High','Medium','Low'].map(f=>`<button class="chip" aria-pressed="${S.sev==f||(!S.sev&&f=='All')}" data-a="sev" data-f="${f}">${f} ${f=='All'?'('+H.length+')':'('+H.filter(r=>r[4]==f).length+')'}</button>`).join('')}</div>
+<div class="tw"><table><thead><tr><th>#</th><th>Heuristic principle</th><th>UI element evaluated</th><th>Problem identified</th><th>Severity</th><th>Suggested improvement</th></tr></thead><tbody>${H.filter(r=>!S.sev||S.sev=='All'||r[4]==S.sev).map(r=>`<tr><td>${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td><td>${r[3]}</td><td><span class="badge ${r[4]}">${r[4]}</span></td><td>${r[5]}</td></tr>`).join('')}</tbody></table></div>
+<p class="mu" style="margin-top:.8rem;font-size:.88rem">Severity: <b>High</b> blocks or misleads users · <b>Medium</b> slows users down · <b>Low</b> is a minor polish issue.</p>`}
+};
+const H=[[1,'Visibility of system status','Dashboard rings and step count','No “last synced” time, so users cannot tell if step data is current.','High','Show “Synced 2 min ago” with a refresh indicator.'],
+[2,'Match between system and real world','“Active minutes” label','Beginners may not know what counts as active time.','Low','Add a plain-language tooltip: “Time spent moving faster than a stroll.”'],
+[3,'User control and freedom','Undo toast after logging','Undo disappears after 6 seconds; older entries cannot be edited or deleted.','Medium','Add Edit and Delete to every activity row.'],
+[4,'Consistency and standards','Save buttons across forms','Button verbs differ (“Save activity”, “Save profile”, “Save goals”) and card corners vary slightly.','Low','Use one verb pattern and one shared component style.'],
+[5,'Error prevention','Profile and goal number fields','Bad values are only caught after pressing Save.','Medium','Add live validation, input limits and unit hints as the user types.'],
+[6,'Recognition rather than recall','Weekly activity chart','Bars have no goal line, so users must remember their target.','Medium','Draw a dashed daily-goal line across the chart.'],
+[7,'Flexibility and efficiency of use','Log activity flow','No shortcuts for frequent activities; every entry needs the full form.','Medium','Add “Repeat last activity” and favourite presets.'],
+[8,'Aesthetic and minimalist design','Dashboard on small phones','Four rings plus two cards make the first screen dense.','Low','Collapse secondary cards behind “Show more”.'],
+[9,'Help users recognize and recover from errors','Workout timer','Refreshing the page loses a running workout without warning.','High','Save timer state and offer “Resume workout”.'],
+[10,'Help and documentation','Help dialog','Help is one general dialog, not specific to the current screen.','Medium','Add contextual “?” tips and a searchable FAQ.']];
+
+function row(a){return `<div class="act"><div class="e" aria-hidden="true">${IC[a.t]}</div><div class="m"><b>${esc(a.n)}</b><div class="mu" style="font-size:.85rem">${a.w}</div></div><div class="s">⏱️ ${a.d} min${a.km?'<br>📍 '+a.km+' km':''}<br>🔥 ${a.c} kcal</div></div>`}
+function render(){document.querySelectorAll('.nb[data-v]').forEach(b=>b.setAttribute('aria-current',b.dataset.v==cur?'page':'false'));$('#main').innerHTML=V[cur]();window.scrollTo(0,0)}
+function go(v){cur=v;S.edit=false;render()}
+function nav(){const h=NAV.map((n,i)=>`<button class="nb" data-v="${n[0]}" data-a="go" title="Shortcut: press ${i+1}"><span class="i" aria-hidden="true">${n[1]}</span>${n[2]}</button>`).join('');$('#nav').innerHTML=h;$('#bn').innerHTML=h.replace(/Evaluation/,'Eval')}
+function toast(m,u){clearTimeout(tt);undo=u||null;const t=$('#toast');t.innerHTML=`<span>${m}</span>${u?'<button data-a="undo">Undo</button>':''}`;t.classList.add('on');tt=setTimeout(()=>t.classList.remove('on'),6000)}
+function modal(h){$('#modal').innerHTML=`<div class="mb" role="dialog" aria-modal="true">${h}</div>`;$('#modal').classList.add('on');const f=$('#modal input,#modal button');f&&f.focus()}
+function close(){$('#modal').classList.remove('on');clearInterval(tmr)}
+function addAct(a){S.acts.unshift(a);S.cal+=a.c;S.min+=a.d;S.dist=+(S.dist+a.km).toFixed(1);S.week[6]+=a.d;if(a.t=='Walking'||a.t=='Running')S.steps+=Math.round(a.km*1300);if(a.t=='Workout')S.wo++}
+function rmAct(a){S.acts.shift();S.cal-=a.c;S.min-=a.d;S.dist=+(S.dist-a.km).toFixed(1);S.week[6]-=a.d;if(a.t=='Walking'||a.t=='Running')S.steps-=Math.round(a.km*1300);if(a.t=='Workout')S.wo--}
+function done(a,m){addAct(a);render();toast(m,()=>{rmAct(a);render();toast('Activity removed.')})}
+function check(f,rules){let ok=true,first=null;for(const k in rules){const [mn,mx,lb]=rules[k],i=f.elements[k],er=i.closest('label').querySelector('.er'),raw=i.value.trim();er.textContent='';i.removeAttribute('aria-invalid');
+if(raw===''&&lb.opt)continue;const v=+raw;if(raw===''||isNaN(v)||v<mn||v>mx){er.textContent=`${lb.n} must be a number between ${mn} and ${mx}.`;i.setAttribute('aria-invalid','true');ok=false;first=first||i}}
+if(first)first.focus();return ok}
+function logForm(){modal(`<h2>Log an activity</h2><form id="fl" novalidate><label>Activity type<select name="t">${Object.keys(IC).map(t=>`<option>${t}</option>`).join('')}</select></label>
+<label>Duration (minutes)<input name="d" type="number" inputmode="numeric" placeholder="e.g. 30"><span class="er"></span></label>
+<label>Distance in km <span class="hint">(optional)</span><input name="k" type="number" step="0.1" inputmode="decimal" placeholder="e.g. 3.5"><span class="er"></span></label>
+<div class="row2"><button type="button" class="btn ghost" data-a="close">Cancel</button><button class="btn">Save activity</button></div></form>`)}
+function startWo(i){const w=WO[i];let left=w[1]*60,paused=false;const draw=()=>{const m=String(Math.floor(left/60)).padStart(2,'0'),s=String(left%60).padStart(2,'0');$('#tm').textContent=m+':'+s;$('#tb').style.width=(100-left/(w[1]*60)*100)+'%';$('#tp').textContent=paused?'Resume':'Pause'};
+modal(`<h2>${w[4]} ${w[0]}</h2><p class="mu">${w[1]} min · ${w[2]}</p><div class="tm num" id="tm" aria-live="off"></div><div class="bar"><i id="tb" style="width:0"></i></div><div class="tip">Move at a comfortable pace. Stop any time if something hurts.</div>
+<div class="row2" style="margin-top:1rem"><button class="btn ghost" data-a="close">Cancel workout</button><button class="btn ghost" id="tp">Pause</button><button class="btn co" id="tf">Finish</button></div>`);
+draw();tmr=setInterval(()=>{if(!paused){left--;draw();if(left<=0)fin()}},1000);
+$('#tp').onclick=()=>{paused=!paused;draw()};
+const fin=()=>{clearInterval(tmr);const el=w[1]*60-left,fr=Math.max(1,Math.round(el/60)),c=Math.round(w[3]*fr/w[1]);close();done({t:'Workout',n:w[0],d:fr,km:0,c,w:'Today'},`🎉 Workout complete! ${fr} min logged, ${c} kcal burned.`)};
+$('#tf').onclick=fin}
+function editGoals(){modal(`<h2>Edit goals</h2><form id="fg" novalidate><label>Daily steps<input name="steps" type="number" value="${S.g.steps}"><span class="er"></span></label><label>Daily calories (kcal)<input name="cal" type="number" value="${S.g.cal}"><span class="er"></span></label><label>Workouts per week<input name="wo" type="number" value="${S.g.wo}"><span class="er"></span></label>
+<div class="row2"><button type="button" class="btn ghost" data-a="rg">Reset to defaults</button><button type="button" class="btn ghost" data-a="close">Cancel</button><button class="btn">Save goals</button></div></form>`)}
+function help(){modal(`<h2>Help &amp; shortcuts</h2><p><b>Log activity:</b> tap “＋ Log activity”, fill in the duration, and save. You can undo right after.</p><p><b>Start a workout:</b> open Workouts and press “Start workout”. Pause or cancel any time.</p><p><b>Change goals:</b> Goals → Edit goals.</p><div class="tip"><b>Keyboard shortcuts:</b> press <b>1–6</b> to switch pages, <b>L</b> to log an activity, <b>?</b> for this help, <b>Esc</b> to close dialogs.</div><div class="row2" style="margin-top:1rem"><button class="btn" data-a="close">Got it</button></div>`)}
+
+const A={go:d=>go(d.v||'dash'),log:logForm,help,close,start:d=>startWo(+d.i),
+filt:d=>{S.f=d.f;render()},sev:d=>{S.sev=d.f;render()},
+editg:editGoals,rg:()=>{S.g={...DEF};close();render();toast('Goals reset to defaults.')},
+editp:()=>{S.edit=true;render()},canp:()=>{S.edit=false;render()},
+undo:()=>{if(undo){undo();}$('#toast').classList.remove('on')}};
+document.addEventListener('click',e=>{if(e.target.id=='modal'){close();return}const b=e.target.closest('[data-a]');if(!b)return;const d=b.dataset;if(d.a=='go'&&!d.v)return;A[d.a](d)});
+document.addEventListener('submit',e=>{e.preventDefault();const f=e.target,v=Object.fromEntries(new FormData(f));
+if(f.id=='fl'){if(!check(f,{d:[1,300,{n:'Duration'}],k:[0,200,{n:'Distance',opt:1}]}))return;const d=+v.d,km=+v.k||0;close();done({t:v.t,n:v.t=='Workout'?'Workout session':v.t+' session',d,km,c:d*RATE[v.t],w:'Today'},`✅ ${v.t} logged: ${d} min.`)}
+if(f.id=='fg'){if(!check(f,{steps:[1000,50000,{n:'Step goal'}],cal:[50,5000,{n:'Calorie goal'}],wo:[1,14,{n:'Workout goal'}]}))return;S.g={steps:+v.steps,cal:+v.cal,wo:+v.wo};close();render();toast('✅ Goals saved.')}
+if(f.id=='fp'){const nm=f.elements.name,er=nm.closest('label').querySelector('.er');er.textContent='';nm.removeAttribute('aria-invalid');
+const ok=check(f,{age:[13,100,{n:'Age'}],h:[100,250,{n:'Height'}],w:[30,300,{n:'Weight'}]});if(!v.name.trim()){er.textContent='Enter your name.';nm.setAttribute('aria-invalid','true');nm.focus();return}if(!ok)return;
+S.p={name:v.name.trim(),age:+v.age,h:+v.h,w:+v.w,goal:v.goal};S.edit=false;render();toast('✅ Profile saved.')}});
+document.addEventListener('keydown',e=>{if(e.key=='Escape'){close();return}if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)||$('#modal').classList.contains('on')||e.ctrlKey||e.metaKey)return;
+const n=+e.key;if(n>=1&&n<=6)go(NAV[n-1][0]);else if(e.key.toLowerCase()=='l')logForm();else if(e.key=='?')help()});
+nav();render();
+</script>
+</body>
+</html>
